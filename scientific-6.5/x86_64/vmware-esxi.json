@@ -1,0 +1,65 @@
+{
+  "variables": {
+    "esxi_remote_host": "",
+    "esxi_remote_password": "",
+    "myhost": "",
+    "mydomain": "",
+    "myip": "",
+    "mygateway": "",
+    "mynetmask": "",
+    "mydns1": "10.0.2.21",
+    "mydns2": "10.0.2.22",
+    "vmname": "",
+    "datastore": "datastore1",
+    "kshost": ""
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "boot_command": [
+        "<tab>",
+        "vmlinuz initrd=initrd.img ",
+        "myhostname={{user `myhostname`}} ",
+        "mydomain={{user `mydomain`}} ",
+        "myip={{user `myip`}} ",
+        "mygateway={{user `mygateway`}} ",
+        "mynetmask={{user `mynetmask`}} ",
+        "mydns1={{user `mydns1`}} ",
+        "mydns2={{user `mydns2`}} ",
+        "ks=http://{{user `kshost`}}/packer/scientific-6.5/x86_64/http/vmware-esxi-ks.cfg <enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 15000,
+      "guest_os_type": "centos-64",
+      "http_directory": "./",
+      "disk_type_id": "thin",
+      "iso_checksum": "2c56df9b6a6cce14fae802de0bb4a675b5bdc69d",
+      "iso_checksum_type": "sha1",
+      "iso_url": "http://ftp.kddilabs.jp/Linux/packages/scientificlinux/6.5/x86_64/iso/SL-65-x86_64-2013-12-05-boot.iso",
+      "ssh_username": "root",
+      "ssh_password": "rootroot",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "shutdown -h now",
+      "remote_host": "{{user `esxi_remote_host`}}",
+      "remote_datastore": "{{user `datastore`}}",
+      "remote_username": "root",
+      "remote_password": "{{user `esxi_remote_password`}}",
+      "remote_type": "esx5",
+      "vm_name": "{{user `vmname`}}",
+      "vmx_data": {
+        "ethernet0.networkName": "VM Network",
+        "ethernet0.present": "TRUE",
+        "ethernet0.virtualDev": "E1000",
+        "memsize": "2048",
+        "numvcpus": "1",
+        "cpuid.coresPerSocket": "1",
+        "scsi0:0.fileName": "disk.vmdk",
+        "scsi0:0.present": "TRUE",
+        "scsi0:0.redo": "",
+        "scsi0.virtualDev": "pvscsi",
+        "ide0:0.present": "FALSE"
+      }
+    }
+  ]
+}
